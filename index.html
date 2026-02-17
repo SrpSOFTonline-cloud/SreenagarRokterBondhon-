@@ -1,283 +1,279 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sreenagar Rokter Bondhon</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family: Arial, sans-serif;
-}
-
-body{
-    background:#f5f5f5;
-}
-
-/* ---------- SPLASH ---------- */
-#splash{
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    background:#eee;
-}
-
-#splash img{
-    width:130px;
-    border-radius:50%;
-}
-
-#splash h1{
-    margin-top:20px;
-    color:#d71920;
-    font-size:24px;
-}
-
-/* ---------- APP ---------- */
-#app{
-    display:none;
-}
-
-/* TOP BAR */
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#f4f4f4}
 .header{
-    background:#d71920;
-    color:white;
-    padding:15px;
-    text-align:center;
-    font-size:20px;
-    font-weight:bold;
+  background:#d71920;color:#fff;padding:15px;
+  text-align:center;font-size:20px;font-weight:bold;
 }
-
-/* LOGIN */
-.container{
-    padding:20px;
-}
-
+.menuBtn{position:absolute;left:15px;top:15px;font-size:22px;cursor:pointer}
+.container{padding:15px}
 .card{
-    background:white;
-    border-radius:10px;
-    padding:20px;
-    box-shadow:0 2px 8px rgba(0,0,0,.2);
+  background:#fff;border-radius:10px;padding:20px;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);margin-bottom:15px;
 }
-
 .logo{
-    width:90px;
-    display:block;
-    margin:0 auto 10px;
+  width:110px;display:block;margin:0 auto 15px;
 }
-
-h2{
-    text-align:center;
-    margin-bottom:20px;
-    color:#555;
+h2{text-align:center;color:#555;margin-bottom:15px}
+input,select,textarea{
+  width:100%;padding:12px;margin:8px 0;
+  border:1px solid #ccc;border-radius:6px;font-size:16px;
 }
-
-input, select{
-    width:100%;
-    padding:12px;
-    margin:8px 0;
-    border:1px solid #ccc;
-    border-radius:6px;
-    font-size:16px;
-}
-
 button{
-    width:100%;
-    padding:12px;
-    background:#d71920;
-    color:white;
-    border:none;
-    border-radius:6px;
-    font-size:18px;
-    margin-top:10px;
+  width:100%;padding:12px;background:#d71920;
+  color:white;border:none;border-radius:6px;
+  margin-top:10px;font-size:17px;
 }
-
-button:hover{
-    opacity:.9;
+.request{
+  background:#fff;border-radius:10px;margin:10px 0;
+  overflow:hidden;box-shadow:0 2px 5px rgba(0,0,0,.2);
 }
-
-/* HOME */
-.request-card{
-    background:white;
-    border-radius:10px;
-    margin:12px 0;
-    overflow:hidden;
-    box-shadow:0 2px 6px rgba(0,0,0,.15);
+.request .body{padding:15px}
+.request .footer{
+  background:#d71920;color:#fff;text-align:center;padding:10px;
 }
-
-.request-body{
-    padding:15px;
-}
-
-.request-btn{
-    background:#d71920;
-    color:white;
-    padding:12px;
-    text-align:center;
-}
-
-/* MENU */
 .menu{
-    position:fixed;
-    left:-240px;
-    top:0;
-    width:220px;
-    height:100%;
-    background:#fff;
-    box-shadow:2px 0 8px rgba(0,0,0,.2);
-    transition:.3s;
-    z-index:999;
+  position:fixed;left:-230px;top:0;width:220px;height:100%;
+  background:#fff;transition:.3s;box-shadow:2px 0 8px rgba(0,0,0,.3);
 }
-
-.menu.active{
-    left:0;
-}
-
-.menu h3{
-    background:#d71920;
-    color:white;
-    padding:20px;
-}
-
+.menu.active{left:0}
+.menu h3{background:#d71920;color:#fff;padding:18px}
 .menu a{
-    display:block;
-    padding:15px;
-    color:#333;
-    text-decoration:none;
-    border-bottom:1px solid #eee;
+  display:block;padding:14px;color:#333;text-decoration:none;
+  border-bottom:1px solid #eee;
 }
-
-/* MENU BUTTON */
-.menu-btn{
-    position:absolute;
-    left:15px;
-    top:15px;
-    font-size:24px;
-    cursor:pointer;
-}
-
-/* PROFILE */
-.profile{
-    text-align:center;
-    padding:20px;
-}
-
-.profile img{
-    width:100px;
-    border-radius:50%;
-}
-
-/* MOBILE */
-@media(max-width:600px){
-    h2{font-size:26px;}
-}
+.hidden{display:none}
+.small{font-size:14px;text-align:center;margin-top:10px}
 </style>
 </head>
 <body>
 
 <!-- SPLASH -->
-<div id="splash">
-    <img src="photo_6098178533654990523_y.jpg" alt="logo">
-    <h1>Sreenagar Rokter Bondhon</h1>
+<div id="splash" style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#eee">
+  <img src="logo.png" class="logo">
+  <h2 style="color:#d71920">Sreenagar Rokter Bondhon</h2>
 </div>
 
 <!-- APP -->
-<div id="app">
+<div id="app" class="hidden">
 
-    <div class="header">
-        <span class="menu-btn" onclick="toggleMenu()">☰</span>
-        Blood Requests
-    </div>
+<div class="header">
+  <span class="menuBtn" onclick="toggleMenu()">☰</span>
+  Blood Donation
+</div>
 
-    <!-- SIDE MENU -->
-    <div class="menu" id="menu">
-        <h3>Menu</h3>
-        <a href="#" onclick="showHome()">Home</a>
-        <a href="#" onclick="showProfile()">Profile</a>
-        <a href="#">Request Blood</a>
-        <a href="#">News & Tips</a>
-    </div>
+<!-- Drawer -->
+<div class="menu" id="menu">
+  <h3>Menu</h3>
+  <a onclick="show('home')">Home</a>
+  <a onclick="show('request')">Request Blood</a>
+  <a onclick="show('news')">News</a>
+  <a onclick="show('admin')">Admin Panel</a>
+  <a onclick="logout()">Logout</a>
+</div>
 
-    <!-- LOGIN SCREEN -->
-    <div class="container" id="loginScreen">
-        <div class="card">
-            <img class="logo" src="photo_6098178533654990523_y.jpg">
-            <h2>Login</h2>
-            <input type="email" placeholder="Email">
-            <input type="password" placeholder="Password">
-            <button onclick="login()">Login</button>
-        </div>
-    </div>
+<!-- LOGIN -->
+<div id="login" class="container">
+  <div class="card">
+    <img src="logo.png" class="logo">
+    <h2>Login</h2>
+    <input id="loginEmail" placeholder="Email">
+    <input id="loginPass" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <div class="small">New user? <a onclick="showRegister()">Create Account</a></div>
+  </div>
+</div>
 
-    <!-- HOME SCREEN -->
-    <div class="container" id="homeScreen" style="display:none;">
-        <div class="request-card">
-            <div class="request-body">
-                <h3>Patient: John Doe</h3>
-                <p>Location: Rafic Hospital</p>
-                <p>Blood Type: A+</p>
-            </div>
-            <div class="request-btn">Details</div>
-        </div>
+<!-- REGISTER -->
+<div id="register" class="container hidden">
+  <div class="card">
+    <img src="logo.png" class="logo">
+    <h2>Register</h2>
+    <input id="regName" placeholder="Name">
+    <input id="regEmail" placeholder="Email">
+    <input id="regPass" type="password" placeholder="Password">
+    <select id="bloodType">
+      <option>A+</option><option>A-</option>
+      <option>B+</option><option>B-</option>
+      <option>O+</option><option>O-</option>
+      <option>AB+</option><option>AB-</option>
+    </select>
+    <button onclick="register()">Register</button>
+  </div>
+</div>
 
-        <div class="request-card">
-            <div class="request-body">
-                <h3>Patient: Test User</h3>
-                <p>Location: Najjar Hospital</p>
-                <p>Blood Type: B-</p>
-            </div>
-            <div class="request-btn">Details</div>
-        </div>
-    </div>
+<!-- HOME -->
+<div id="home" class="container hidden">
+  <div id="requestsList"></div>
+</div>
 
-    <!-- PROFILE -->
-    <div class="container" id="profileScreen" style="display:none;">
-        <div class="card profile">
-            <img src="photo_6098178533654990523_y.jpg">
-            <h2>Bassel Cheaib</h2>
-            <p>email@example.com</p>
-            <p>Blood Type: AB+</p>
-        </div>
-    </div>
+<!-- REQUEST FORM -->
+<div id="request" class="container hidden">
+  <div class="card">
+    <h2>Submit Blood Request</h2>
+    <input id="patient" placeholder="Patient Name">
+    <input id="location" placeholder="Hospital / Location">
+    <select id="reqBlood">
+      <option>A+</option><option>A-</option>
+      <option>B+</option><option>B-</option>
+      <option>O+</option><option>O-</option>
+      <option>AB+</option><option>AB-</option>
+    </select>
+    <button onclick="submitRequest()">Submit</button>
+  </div>
+</div>
+
+<!-- NEWS -->
+<div id="news" class="container hidden">
+  <div id="newsList"></div>
+</div>
+
+<!-- ADMIN -->
+<div id="admin" class="container hidden">
+  <div class="card">
+    <h2>Add News</h2>
+    <input id="newsTitle" placeholder="Title">
+    <textarea id="newsBody" rows="4" placeholder="News text"></textarea>
+    <button onclick="addNews()">Submit News</button>
+  </div>
+</div>
 
 </div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
-// Splash
+/* ===== FIREBASE CONFIG ===== */
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* SPLASH */
 setTimeout(()=>{
-    document.getElementById("splash").style.display="none";
-    document.getElementById("app").style.display="block";
+  document.getElementById("splash").style.display="none";
+  document.getElementById("app").classList.remove("hidden");
 },2000);
 
-// Login
-function login(){
-    document.getElementById("loginScreen").style.display="none";
-    document.getElementById("homeScreen").style.display="block";
-}
-
-// Menu
+/* MENU */
 function toggleMenu(){
-    document.getElementById("menu").classList.toggle("active");
+  document.getElementById("menu").classList.toggle("active");
+}
+function show(id){
+  ["home","request","news","admin"].forEach(s=>{
+    document.getElementById(s).classList.add("hidden");
+  });
+  document.getElementById(id).classList.remove("hidden");
+  toggleMenu();
 }
 
-// Pages
-function showHome(){
-    document.getElementById("homeScreen").style.display="block";
-    document.getElementById("profileScreen").style.display="none";
-    toggleMenu();
+/* AUTH */
+function showRegister(){
+  login.classList.add("hidden");
+  register.classList.remove("hidden");
 }
 
-function showProfile(){
-    document.getElementById("homeScreen").style.display="none";
-    document.getElementById("profileScreen").style.display="block";
-    toggleMenu();
+function register(){
+  auth.createUserWithEmailAndPassword(
+    regEmail.value, regPass.value
+  ).then(()=>alert("Register Success"));
+}
+
+function login(){
+  auth.signInWithEmailAndPassword(
+    loginEmail.value, loginPass.value
+  );
+}
+
+function logout(){
+  auth.signOut();
+}
+
+/* LOGIN STATE */
+auth.onAuthStateChanged(user=>{
+  if(user){
+    login.classList.add("hidden");
+    register.classList.add("hidden");
+    show("home");
+    loadRequests();
+    loadNews();
+  }else{
+    login.classList.remove("hidden");
+  }
+});
+
+/* REQUEST SUBMIT */
+function submitRequest(){
+  db.collection("requests").add({
+    patient: patient.value,
+    location: location.value,
+    blood: reqBlood.value,
+    time: Date.now()
+  });
+  alert("Request Submitted");
+}
+
+/* LOAD REQUESTS */
+function loadRequests(){
+  db.collection("requests").orderBy("time","desc")
+  .onSnapshot(snap=>{
+    requestsList.innerHTML="";
+    snap.forEach(doc=>{
+      let d=doc.data();
+      requestsList.innerHTML+=`
+      <div class="request">
+        <div class="body">
+          <h3>${d.patient}</h3>
+          <p>${d.location}</p>
+          <p>Blood: ${d.blood}</p>
+        </div>
+        <div class="footer">Details</div>
+      </div>`;
+    });
+  });
+}
+
+/* NEWS */
+function addNews(){
+  db.collection("news").add({
+    title: newsTitle.value,
+    body: newsBody.value,
+    time: Date.now()
+  });
+  alert("News Added");
+}
+
+function loadNews(){
+  db.collection("news").orderBy("time","desc")
+  .onSnapshot(snap=>{
+    newsList.innerHTML="";
+    snap.forEach(doc=>{
+      let n=doc.data();
+      newsList.innerHTML += `
+      <div class="card">
+        <h3>${n.title}</h3>
+        <p>${n.body}</p>
+      </div>`;
+    });
+  });
 }
 </script>
 
 </body>
 </html>
+
