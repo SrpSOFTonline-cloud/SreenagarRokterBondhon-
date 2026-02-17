@@ -7,12 +7,12 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#f4f4f4;padding-bottom:80px}
+body{background:#f4f4f4;padding-bottom:85px}
 
 /* HEADER */
 .header{
   background:#d71920;
-  color:#fff;
+  color:white;
   padding:15px;
   text-align:center;
   font-size:20px;
@@ -26,19 +26,23 @@ body{background:#f4f4f4;padding-bottom:80px}
   cursor:pointer;
 }
 
-/* UI */
+/* APP NAME (LOGO REPLACE) */
+.appName{
+  text-align:center;
+  font-size:24px;
+  color:#d71920;
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+/* COMMON */
 .container{padding:15px}
 .card{
-  background:#fff;
+  background:white;
   border-radius:10px;
   padding:20px;
   box-shadow:0 2px 6px rgba(0,0,0,.2);
   margin-bottom:15px;
-}
-.logo{
-  width:110px;
-  display:block;
-  margin:0 auto 15px;
 }
 h2{text-align:center;color:#555;margin-bottom:15px}
 
@@ -52,17 +56,17 @@ input,select,textarea{
 button{
   width:100%;
   padding:12px;
-  background:#d71920;
-  color:white;
   border:none;
   border-radius:6px;
+  background:#d71920;
+  color:white;
   margin-top:10px;
   font-size:16px;
 }
 .link{text-align:center;margin-top:10px}
 .link span{color:#d71920;cursor:pointer}
 
-/* Drawer */
+/* DRAWER */
 .menu{
   position:fixed;
   left:-230px;
@@ -75,10 +79,19 @@ button{
   z-index:999;
 }
 .menu.active{left:0}
-.menu h3{background:#d71920;color:white;padding:18px}
-.menu a{display:block;padding:14px;border-bottom:1px solid #eee;cursor:pointer}
+.menu h3{
+  background:#d71920;
+  color:white;
+  padding:18px;
+}
+.menu a{
+  display:block;
+  padding:14px;
+  border-bottom:1px solid #eee;
+  cursor:pointer;
+}
 
-/* Request card */
+/* REQUEST CARD */
 .request{
   background:white;
   border-radius:10px;
@@ -87,7 +100,12 @@ button{
   box-shadow:0 2px 6px rgba(0,0,0,.2);
 }
 .request .body{padding:15px}
-.request .footer{background:#d71920;color:white;text-align:center;padding:10px}
+.request .footer{
+  background:#d71920;
+  color:white;
+  text-align:center;
+  padding:10px;
+}
 
 .hidden{display:none}
 
@@ -98,7 +116,7 @@ button{
   left:0;
   width:100%;
   background:#111;
-  color:#fff;
+  color:white;
   text-align:center;
   padding:10px;
   font-size:13px;
@@ -110,8 +128,8 @@ button{
 
 <!-- SPLASH -->
 <div id="splash" style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#eee">
-  <img src="logo.png" class="logo" onerror="this.src='https://via.placeholder.com/110?text=LOGO';">
-  <h2 style="color:#d71920">Sreenagar Rokter Bondhon</h2>
+  <div class="appName">Sreenagar Rokter Bondhon</div>
+  <h2 style="color:#d71920">Blood Donation App</h2>
 </div>
 
 <!-- APP -->
@@ -135,7 +153,7 @@ button{
 <!-- LOGIN -->
 <div id="loginPage" class="container">
   <div class="card">
-    <img src="logo.png" class="logo">
+    <div class="appName">Sreenagar Rokter Bondhon</div>
     <h2>Login</h2>
     <input id="loginEmail" placeholder="Email">
     <input id="loginPass" type="password" placeholder="Password">
@@ -147,7 +165,7 @@ button{
 <!-- REGISTER -->
 <div id="registerPage" class="container hidden">
   <div class="card">
-    <img src="logo.png" class="logo">
+    <div class="appName">Sreenagar Rokter Bondhon</div>
     <h2>Register</h2>
     <input id="regName" placeholder="Name">
     <input id="regEmail" placeholder="Email">
@@ -158,7 +176,9 @@ button{
 </div>
 
 <!-- HOME -->
-<div id="home" class="container hidden"><div id="requestsList"></div></div>
+<div id="home" class="container hidden">
+  <div id="requestsList"></div>
+</div>
 
 <!-- REQUEST -->
 <div id="request" class="container hidden">
@@ -166,20 +186,22 @@ button{
     <h2>Submit Blood Request</h2>
     <input id="patient" placeholder="Patient Name">
     <input id="location" placeholder="Hospital / Location">
-    <input id="reqBlood" placeholder="Blood Group">
+    <input id="reqBlood" placeholder="Blood Group (A+, O-, etc)">
     <button onclick="submitRequest()">Submit</button>
   </div>
 </div>
 
 <!-- NEWS -->
-<div id="news" class="container hidden"><div id="newsList"></div></div>
+<div id="news" class="container hidden">
+  <div id="newsList"></div>
+</div>
 
 <!-- ADMIN -->
 <div id="admin" class="container hidden">
   <div class="card">
     <h2>Add News (Admin)</h2>
     <input id="newsTitle" placeholder="Title">
-    <textarea id="newsBody"></textarea>
+    <textarea id="newsBody" rows="4" placeholder="News text"></textarea>
     <button onclick="addNews()">Add News</button>
   </div>
 </div>
@@ -188,7 +210,7 @@ button{
 
 <!-- FOOTER -->
 <div class="footer">
-  Developer: :contentReference[oaicite:0]{index=0} <br>
+  Developer Company: SRP SOFT LTD.<br>
   TEL: +8809696060547
 </div>
 
@@ -205,7 +227,8 @@ const firebaseConfig = {
   projectId: "srb-2026",
   storageBucket: "srb-2026.firebasestorage.app",
   messagingSenderId: "843806660236",
-  appId: "1:843806660236:web:b48f4e7c3a962d57e84da9"
+  appId: "1:843806660236:web:b48f4e7c3a962d57e84da9",
+  measurementId: "G-3JYR0GE77W"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -213,7 +236,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* ADMIN EMAIL SET */
+/* ADMIN */
 const ADMIN_EMAIL = "SRP.MART.ONLINE@GMAIL.COM";
 
 /* SPLASH */
@@ -237,7 +260,7 @@ function openPage(id){
   menu.classList.remove("active");
 }
 
-/* LOGIN/REGISTER SWITCH */
+/* LOGIN REGISTER SWITCH */
 function showRegister(){
   loginPage.classList.add("hidden");
   registerPage.classList.remove("hidden");
@@ -249,28 +272,36 @@ function showLogin(){
 
 /* AUTH */
 function register(){
-  auth.createUserWithEmailAndPassword(regEmail.value,regPass.value)
-  .then(()=>{ alert("Register Success"); showLogin(); })
-  .catch(e=>alert(e.message));
+  auth.createUserWithEmailAndPassword(
+    regEmail.value, regPass.value
+  ).then(()=>{
+    alert("Register Success");
+    showLogin();
+  }).catch(e=>alert(e.message));
 }
 
 function login(){
-  auth.signInWithEmailAndPassword(loginEmail.value,loginPass.value)
-  .catch(e=>alert(e.message));
+  auth.signInWithEmailAndPassword(
+    loginEmail.value, loginPass.value
+  ).catch(e=>alert(e.message));
 }
 
 function logout(){ auth.signOut(); }
 
+/* AUTH STATE */
 auth.onAuthStateChanged(user=>{
   if(user){
     loginPage.classList.add("hidden");
     registerPage.classList.add("hidden");
     openPage("home");
+    loadRequests();
+    loadNews();
 
-    if(user.email===ADMIN_EMAIL)
+    if(user.email === ADMIN_EMAIL){
       adminMenu.classList.remove("hidden");
-    else
+    }else{
       adminMenu.classList.add("hidden");
+    }
   }else{
     hidePages();
     loginPage.classList.remove("hidden");
@@ -282,22 +313,57 @@ function submitRequest(){
   db.collection("requests").add({
     patient:patient.value,
     location:location.value,
-    blood:reqBlood.value
+    blood:reqBlood.value,
+    time:Date.now()
+  }).then(()=>alert("Request Submitted"));
+}
+
+function loadRequests(){
+  db.collection("requests").orderBy("time","desc")
+  .onSnapshot(snap=>{
+    requestsList.innerHTML="";
+    snap.forEach(doc=>{
+      const d=doc.data();
+      requestsList.innerHTML+=`
+      <div class="request">
+        <div class="body">
+          <h3>${d.patient}</h3>
+          <p>${d.location}</p>
+          <p>Blood: ${d.blood}</p>
+        </div>
+        <div class="footer">Details</div>
+      </div>`;
+    });
   });
-  alert("Request Submitted");
 }
 
 /* NEWS */
 function addNews(){
-  if(auth.currentUser.email!==ADMIN_EMAIL){
+  if(auth.currentUser.email !== ADMIN_EMAIL){
     alert("Admin Only");
     return;
   }
+
   db.collection("news").add({
     title:newsTitle.value,
-    body:newsBody.value
+    body:newsBody.value,
+    time:Date.now()
+  }).then(()=>alert("News Added"));
+}
+
+function loadNews(){
+  db.collection("news").orderBy("time","desc")
+  .onSnapshot(snap=>{
+    newsList.innerHTML="";
+    snap.forEach(doc=>{
+      const n=doc.data();
+      newsList.innerHTML+=`
+      <div class="card">
+        <h3>${n.title}</h3>
+        <p>${n.body}</p>
+      </div>`;
+    });
   });
-  alert("News Added");
 }
 </script>
 
