@@ -13,7 +13,6 @@
   --primary: #d71920;
   --primary-dark: #9b0d12;
   --primary-light: #ffebee;
-  --accent: #fff3cd;
   --text: #2c3e50;
   --text-light: #7f8c8d;
   --bg: #f4f6f9;
@@ -95,7 +94,7 @@ body{background:var(--bg);padding-bottom:90px; color: var(--text);}
   overflow: hidden;
 }
 .hero-card::after {
-  content: "\f055"; /* Blood icon */
+  content: "\f055"; 
   font-family: "Font Awesome 6 Free";
   font-weight: 900;
   position: absolute;
@@ -221,7 +220,7 @@ button.primary-btn:active { transform: translateY(0); }
 .donor-info p { font-size: 12px; color: var(--text-light); display: flex; align-items: center; gap: 4px; }
 .donor-call-btn {
   margin-left: auto;
-  background: #25D366; /* WhatsApp green for call action */
+  background: #25D366; 
   color: white;
   width: 40px;
   height: 40px;
@@ -434,7 +433,7 @@ button.primary-btn:active { transform: translateY(0); }
     </p>
     <div class="hero-stats">
       <div class="stat-item">
-        <div class="stat-num">50+</div>
+        <div class="stat-num" id="statDonors">0</div>
         <div class="stat-label">Active Donors</div>
       </div>
       <div class="stat-item">
@@ -546,6 +545,7 @@ button.primary-btn:active { transform: translateY(0); }
 <div id="beDonor" class="container hidden">
   <div class="card">
     <div class="card-title"><i class="fas fa-user-plus"></i> Register as Donor</div>
+    <p style="font-size:12px; color:green; margin-bottom:15px;"><i class="fas fa-info-circle"></i> After registration, you will appear in the "Find Donor" list automatically.</p>
     
     <div class="form-group">
       <label class="form-label">Full Name</label>
@@ -571,7 +571,7 @@ button.primary-btn:active { transform: translateY(0); }
   </div>
 </div>
 
-<!-- ELIGIBILITY PAGE (NEW) -->
+<!-- ELIGIBILITY PAGE -->
 <div id="eligibility" class="container hidden">
   <div class="card">
     <div class="card-title"><i class="fas fa-clipboard-check"></i> Who Can Donate?</div>
@@ -654,7 +654,8 @@ button.primary-btn:active { transform: translateY(0); }
     <span class="dev-comp">SRP SOFT LTD.</span>
   </div>
   <div class="footer-right">
-    <a href="tel:+8809696060547" class="hotline-link">
+    <!-- UPDATED HOTLINE NUMBER -->
+    <a href="tel:+8809697755193" class="hotline-link">
       <i class="fas fa-phone-alt"></i> Hotline
     </a>
   </div>
@@ -674,22 +675,43 @@ const EMAILJS_TEMPLATE_ID = "template_5j956tn";
 
 if(typeof emailjs !== 'undefined'){ emailjs.init(EMAILJS_PUBLIC_KEY); }
 
-/* DUMMY DATABASE */
-const donorsDB = [
-  { name: "Rahim Uddin", blood: "A+", phone: "01711111111", location: "Sreenagar" },
-  { name: "Karim Hossain", blood: "A+", phone: "01822222222", location: "Dhaka" },
-  { name: "Fatima Akter", blood: "B+", phone: "01933333333", location: "Munshiganj" },
-  { name: "Jamal Hossain", blood: "B+", phone: "01644444444", location: "Sreenagar" },
-  { name: "Ruma Islam", blood: "O+", phone: "01555555555", location: "Dohar" },
-  { name: "Sumon Mia", blood: "O-", phone: "01466666666", location: "Sreenagar" },
-  { name: "Abdullah", blood: "AB+", phone: "01377777777", location: "Dhaka" },
-];
+/* DUMMY DATABASE WITH LOCAL STORAGE CHECK */
+// We check if 'donors_data' exists in local storage, if not we create default
+function getDonorData() {
+    const stored = localStorage.getItem('sreenagar_donors_data');
+    if (stored) {
+        return JSON.parse(stored);
+    } else {
+        // Default Dummy Data
+        const defaultData = [
+          { name: "Rahim Uddin", blood: "A+", phone: "01711111111", location: "Sreenagar" },
+          { name: "Karim Hossain", blood: "A+", phone: "01822222222", location: "Dhaka" },
+          { name: "Fatima Akter", blood: "B+", phone: "01933333333", location: "Munshiganj" },
+          { name: "Jamal Hossain", blood: "B+", phone: "01644444444", location: "Sreenagar" },
+          { name: "Ruma Islam", blood: "O+", phone: "01555555555", location: "Dohar" },
+          { name: "Sumon Mia", blood: "O-", phone: "01466666666", location: "Sreenagar" },
+          { name: "Abdullah", blood: "AB+", phone: "01377777777", location: "Dhaka" },
+        ];
+        localStorage.setItem('sreenagar_donors_data', JSON.stringify(defaultData));
+        return defaultData;
+    }
+}
+
+// Load donors into variable
+let donorsDB = getDonorData();
 
 /* APP LOGIC */
 setTimeout(()=>{
   document.getElementById("splash").style.display="none";
   document.getElementById("app").classList.remove("hidden");
+  updateDonorCount(); // Update count on load
 }, 2500);
+
+function updateDonorCount() {
+    const count = donorsDB.length;
+    const countElement = document.getElementById('statDonors');
+    if(countElement) countElement.innerText = count + '+';
+}
 
 function toggleMenu(){ 
   const menu = document.getElementById("menu");
@@ -722,6 +744,9 @@ function filterDonors() {
       return;
   }
 
+  // Reload from storage just in case
+  donorsDB = getDonorData();
+  
   const filteredDonors = donorsDB.filter(d => d.blood === selectedBlood);
 
   if (filteredDonors.length === 0) {
@@ -747,7 +772,6 @@ function sendEmailRequest(type) {
   let templateParams = {};
   let valid = false;
   
-  // Simple validation logic
   if (type === 'request') {
       const patient = document.getElementById("patient").value;
       const location = document.getElementById("location").value;
@@ -761,21 +785,41 @@ function sendEmailRequest(type) {
       const name = document.getElementById("donorName").value;
       const phone = document.getElementById("donorPhone").value;
       const blood = document.getElementById("donorBlood").value;
+      const location = document.getElementById("donorLocation").value;
       
-      if(!name || !phone) { alert("Please fill all fields!"); return; }
-      templateParams = { to_email: ADMIN_EMAIL, subject: "New Donor", message: `Name: ${name}\nBlood: ${blood}\nPhone: ${phone}` };
+      if(!name || !phone || !location) { alert("Please fill all fields!"); return; }
+      
+      // Add to Local Storage Automatically
+      const newDonor = { name: name, blood: blood, phone: phone, location: location };
+      
+      // Get existing data, add new, save back
+      let currentDonors = getDonorData();
+      currentDonors.push(newDonor);
+      localStorage.setItem('sreenagar_donors_data', JSON.stringify(currentDonors));
+      
+      // Update the variable
+      donorsDB = currentDonors;
+      updateDonorCount(); // Update dashboard stat
+
+      templateParams = { to_email: ADMIN_EMAIL, subject: "New Donor Registration", message: `Name: ${name}\nBlood: ${blood}\nPhone: ${phone}\nLoc: ${location}` };
       valid = true;
   }
 
   if (valid) {
       const btn = event.target;
       btn.disabled = true;
-      btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Sending...";
+      btn.innerHTML = "<i class='fas fa-spinner fa-spin'></i> Processing...";
 
       if(typeof emailjs !== 'undefined'){
           emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
             .then(() => {
-              alert("Success! Your request has been submitted.");
+              alert("Success! Registration Complete. You are now in the donor list.");
+              // Clear form
+              if(type === 'donor') {
+                  document.getElementById("donorName").value = "";
+                  document.getElementById("donorPhone").value = "";
+                  document.getElementById("donorLocation").value = "";
+              }
               openPage('home');
             })
             .catch((e) => {
