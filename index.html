@@ -17,6 +17,7 @@ body{background:#f4f4f4;padding-bottom:85px}
   text-align:center;
   font-size:20px;
   position:relative;
+  z-index:10;
 }
 .menuBtn{
   position:absolute;
@@ -26,7 +27,7 @@ body{background:#f4f4f4;padding-bottom:85px}
   cursor:pointer;
 }
 
-/* APP NAME (LOGO REPLACE) */
+/* APP NAME */
 .appName{
   text-align:center;
   font-size:24px;
@@ -62,16 +63,29 @@ button{
   color:white;
   margin-top:10px;
   font-size:16px;
+  cursor:pointer;
+  transition: background 0.3s;
 }
+button:hover{background:#b01518;}
 .link{text-align:center;margin-top:10px}
-.link span{color:#d71920;cursor:pointer}
+.link span{color:#d71920;cursor:pointer;font-weight:bold;}
+
+/* OVERLAY */
+.overlay{
+  position:fixed;
+  left:0; top:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.5);
+  z-index:998;
+  display:none;
+}
 
 /* DRAWER */
 .menu{
   position:fixed;
-  left:-230px;
+  left:-260px;
   top:0;
-  width:220px;
+  width:250px;
   height:100%;
   background:white;
   transition:.3s;
@@ -82,14 +96,18 @@ button{
 .menu h3{
   background:#d71920;
   color:white;
-  padding:18px;
+  padding:20px;
+  margin:0;
 }
 .menu a{
   display:block;
-  padding:14px;
+  padding:16px 20px;
   border-bottom:1px solid #eee;
   cursor:pointer;
+  color:#333;
+  text-decoration:none;
 }
+.menu a:hover{background:#f9f9f9}
 
 /* REQUEST CARD */
 .request{
@@ -104,7 +122,13 @@ button{
   background:#d71920;
   color:white;
   text-align:center;
-  padding:10px;
+  padding:12px;
+  font-weight:bold;
+}
+.request .time{
+  color:#888;
+  font-size:12px;
+  margin-top:5px;
 }
 
 .hidden{display:none}
@@ -121,6 +145,7 @@ button{
   padding:10px;
   font-size:13px;
   line-height:1.5;
+  z-index:10;
 }
 </style>
 </head>
@@ -130,6 +155,7 @@ button{
 <div id="splash" style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#eee">
   <div class="appName">Sreenagar Rokter Bondhon</div>
   <h2 style="color:#d71920">Blood Donation App</h2>
+  <p style="margin-top:10px; color:#777">Loading...</p>
 </div>
 
 <!-- APP -->
@@ -139,6 +165,9 @@ button{
   <span class="menuBtn" onclick="toggleMenu()">☰</span>
   Blood Donation
 </div>
+
+<!-- OVERLAY FOR MENU -->
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
 <!-- MENU -->
 <div class="menu" id="menu">
@@ -155,7 +184,7 @@ button{
   <div class="card">
     <div class="appName">Sreenagar Rokter Bondhon</div>
     <h2>Login</h2>
-    <input id="loginEmail" placeholder="Email">
+    <input id="loginEmail" placeholder="Email" type="email">
     <input id="loginPass" type="password" placeholder="Password">
     <button onclick="login()">Login</button>
     <div class="link">New user? <span onclick="showRegister()">Create Account</span></div>
@@ -167,8 +196,8 @@ button{
   <div class="card">
     <div class="appName">Sreenagar Rokter Bondhon</div>
     <h2>Register</h2>
-    <input id="regName" placeholder="Name">
-    <input id="regEmail" placeholder="Email">
+    <input id="regName" placeholder="Full Name">
+    <input id="regEmail" placeholder="Email" type="email">
     <input id="regPass" type="password" placeholder="Password">
     <button onclick="register()">Register</button>
     <div class="link"><span onclick="showLogin()">Back to Login</span></div>
@@ -177,6 +206,7 @@ button{
 
 <!-- HOME -->
 <div id="home" class="container hidden">
+  <h2 style="text-align:left; color:#333; margin-bottom:15px;">Active Requests</h2>
   <div id="requestsList"></div>
 </div>
 
@@ -187,12 +217,14 @@ button{
     <input id="patient" placeholder="Patient Name">
     <input id="location" placeholder="Hospital / Location">
     <input id="reqBlood" placeholder="Blood Group (A+, O-, etc)">
-    <button onclick="submitRequest()">Submit</button>
+    <input id="reqContact" type="tel" placeholder="Contact Number (Required)">
+    <button onclick="submitRequest()">Submit Request</button>
   </div>
 </div>
 
 <!-- NEWS -->
 <div id="news" class="container hidden">
+  <h2 style="text-align:left; color:#333; margin-bottom:15px;">News & Updates</h2>
   <div id="newsList"></div>
 </div>
 
@@ -236,17 +268,51 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-/* ADMIN */
+/* ADMIN CONFIG */
 const ADMIN_EMAIL = "SRP.MART.ONLINE@GMAIL.COM";
+
+/* SECURITY: Prevent XSS (Cross-Site Scripting) */
+function escapeHtml(text) {
+  if (!text) return "";
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+/* TIME FORMATTER */
+function timeSince(timestamp) {
+  const now = new Date();
+  const seconds = Math.floor((now - timestamp) / 1000);
+  
+  let interval = seconds / 31536000;
+  if (interval > 1) return Math.floor(interval) + " years ago";
+  interval = seconds / 2592000;
+  if (interval > 1) return Math.floor(interval) + " months ago";
+  interval = seconds / 86400;
+  if (interval > 1) return Math.floor(interval) + " days ago";
+  interval = seconds / 3600;
+  if (interval > 1) return Math.floor(interval) + " hours ago";
+  interval = seconds / 60;
+  if (interval > 1) return Math.floor(interval) + " minutes ago";
+  return "Just now";
+}
 
 /* SPLASH */
 setTimeout(()=>{
-  splash.style.display="none";
-  app.classList.remove("hidden");
+  document.getElementById("splash").style.display="none";
+  document.getElementById("app").classList.remove("hidden");
 },1500);
 
 /* MENU */
-function toggleMenu(){ menu.classList.toggle("active"); }
+function toggleMenu(){ 
+  const menu = document.getElementById("menu");
+  const overlay = document.getElementById("overlay");
+  menu.classList.toggle("active");
+  overlay.style.display = menu.classList.contains("active") ? "block" : "none";
+}
 
 function hidePages(){
   ["home","request","news","admin"].forEach(id=>{
@@ -257,81 +323,137 @@ function hidePages(){
 function openPage(id){
   hidePages();
   document.getElementById(id).classList.remove("hidden");
-  menu.classList.remove("active");
+  toggleMenu(); // Close menu after selection
 }
 
 /* LOGIN REGISTER SWITCH */
 function showRegister(){
-  loginPage.classList.add("hidden");
-  registerPage.classList.remove("hidden");
+  document.getElementById("loginPage").classList.add("hidden");
+  document.getElementById("registerPage").classList.remove("hidden");
 }
 function showLogin(){
-  registerPage.classList.add("hidden");
-  loginPage.classList.remove("hidden");
+  document.getElementById("registerPage").classList.add("hidden");
+  document.getElementById("loginPage").classList.remove("hidden");
 }
 
 /* AUTH */
 function register(){
-  auth.createUserWithEmailAndPassword(
-    regEmail.value, regPass.value
-  ).then(()=>{
-    alert("Register Success");
-    showLogin();
-  }).catch(e=>alert(e.message));
+  const name = document.getElementById("regName").value;
+  const email = document.getElementById("regEmail").value;
+  const pass = document.getElementById("regPass").value;
+
+  if(!name || !email || !pass) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  auth.createUserWithEmailAndPassword(email, pass)
+    .then((userCredential) => {
+      // Update profile with display name
+      return userCredential.user.updateProfile({ displayName: name });
+    })
+    .then(()=>{
+      alert("Register Success");
+      showLogin();
+    })
+    .catch(e=>alert(e.message));
 }
 
 function login(){
-  auth.signInWithEmailAndPassword(
-    loginEmail.value, loginPass.value
-  ).catch(e=>alert(e.message));
+  const email = document.getElementById("loginEmail").value;
+  const pass = document.getElementById("loginPass").value;
+  
+  if(!email || !pass) {
+    alert("Please enter email and password");
+    return;
+  }
+
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(e=>alert(e.message));
 }
 
-function logout(){ auth.signOut(); }
+function logout(){ 
+  auth.signOut(); 
+  toggleMenu(); // Close menu on logout
+}
 
 /* AUTH STATE */
 auth.onAuthStateChanged(user=>{
   if(user){
-    loginPage.classList.add("hidden");
-    registerPage.classList.add("hidden");
-    openPage("home");
-    loadRequests();
-    loadNews();
-
-    if(user.email === ADMIN_EMAIL){
-      adminMenu.classList.remove("hidden");
-    }else{
-      adminMenu.classList.add("hidden");
+    document.getElementById("loginPage").classList.add("hidden");
+    document.getElementById("registerPage").classList.add("hidden");
+    openPage('home');
+    
+    // Check admin role
+    if(user.email && user.email.toUpperCase() === ADMIN_EMAIL.toUpperCase()){
+      document.getElementById("adminMenu").classList.remove("hidden");
+    } else {
+      document.getElementById("adminMenu").classList.add("hidden");
     }
   }else{
     hidePages();
-    loginPage.classList.remove("hidden");
+    document.getElementById("loginPage").classList.remove("hidden");
+    document.getElementById("adminMenu").classList.add("hidden");
   }
 });
 
 /* REQUEST */
 function submitRequest(){
+  const patientVal = document.getElementById("patient").value;
+  const locationVal = document.getElementById("location").value;
+  const bloodVal = document.getElementById("reqBlood").value;
+  const contactVal = document.getElementById("reqContact").value;
+
+  if(!patientVal || !locationVal || !bloodVal || !contactVal) {
+    alert("All fields including Contact Number are required!");
+    return;
+  }
+
   db.collection("requests").add({
-    patient:patient.value,
-    location:location.value,
-    blood:reqBlood.value,
-    time:Date.now()
-  }).then(()=>alert("Request Submitted"));
+    patient: patientVal,
+    location: locationVal,
+    blood: bloodVal,
+    contact: contactVal,
+    time: Date.now()
+  }).then(()=>{
+    alert("Request Submitted Successfully!");
+    document.getElementById("patient").value = "";
+    document.getElementById("location").value = "";
+    document.getElementById("reqBlood").value = "";
+    document.getElementById("reqContact").value = "";
+    openPage('home');
+  }).catch(e => alert("Error: " + e.message));
 }
 
 function loadRequests(){
   db.collection("requests").orderBy("time","desc")
   .onSnapshot(snap=>{
-    requestsList.innerHTML="";
+    const list = document.getElementById("requestsList");
+    list.innerHTML="";
+    
+    if(snap.empty){
+      list.innerHTML = "<p style='text-align:center;color:#777'>No active requests.</p>";
+      return;
+    }
+
     snap.forEach(doc=>{
       const d=doc.data();
-      requestsList.innerHTML+=`
+      const safePatient = escapeHtml(d.patient);
+      const safeLocation = escapeHtml(d.location);
+      const safeBlood = escapeHtml(d.blood);
+      const safeContact = escapeHtml(d.contact);
+      const displayTime = d.time ? timeSince(d.time) : "";
+
+      list.innerHTML+=`
       <div class="request">
         <div class="body">
-          <h3>${d.patient}</h3>
-          <p>${d.location}</p>
-          <p>Blood: ${d.blood}</p>
+          <h3 style="color:#d71920">${safePatient}</h3>
+          <p><strong>Location:</strong> ${safeLocation}</p>
+          <p><strong>Blood:</strong> ${safeBlood}</p>
+          <p><strong>Contact:</strong> ${safeContact}</p>
+          <div class="time">${displayTime}</div>
         </div>
-        <div class="footer">Details</div>
+        <div class="footer">Call Now</div>
       </div>`;
     });
   });
@@ -339,32 +461,58 @@ function loadRequests(){
 
 /* NEWS */
 function addNews(){
-  if(auth.currentUser.email !== ADMIN_EMAIL){
+  if(!auth.currentUser || auth.currentUser.email.toUpperCase() !== ADMIN_EMAIL.toUpperCase()){
     alert("Admin Only");
     return;
   }
 
+  const titleVal = document.getElementById("newsTitle").value;
+  const bodyVal = document.getElementById("newsBody").value;
+
+  if(!titleVal || !bodyVal) {
+    alert("Title and Body required");
+    return;
+  }
+
   db.collection("news").add({
-    title:newsTitle.value,
-    body:newsBody.value,
+    title: titleVal,
+    body: bodyVal,
     time:Date.now()
-  }).then(()=>alert("News Added"));
+  }).then(()=>{
+    alert("News Added");
+    document.getElementById("newsTitle").value = "";
+    document.getElementById("newsBody").value = "";
+  }).catch(e => alert("Error: " + e.message));
 }
 
 function loadNews(){
   db.collection("news").orderBy("time","desc")
   .onSnapshot(snap=>{
-    newsList.innerHTML="";
+    const list = document.getElementById("newsList");
+    list.innerHTML="";
+    
+    if(snap.empty){
+       list.innerHTML = "<p style='text-align:center;color:#777'>No news available.</p>";
+       return;
+    }
+
     snap.forEach(doc=>{
       const n=doc.data();
-      newsList.innerHTML+=`
+      const safeTitle = escapeHtml(n.title);
+      const safeBody = escapeHtml(n.body);
+      list.innerHTML+=`
       <div class="card">
-        <h3>${n.title}</h3>
-        <p>${n.body}</p>
+        <h3 style="margin-bottom:5px">${safeTitle}</h3>
+        <p style="color:#555">${safeBody}</p>
       </div>`;
     });
   });
 }
+
+/* Initialize Listeners */
+loadRequests();
+loadNews();
+
 </script>
 
 </body>
