@@ -175,12 +175,15 @@ button:hover{background:#b01518;}
   <a onclick="openPage('home')">Home</a>
   <a onclick="openPage('request')">Request Blood</a>
   <a onclick="openPage('news')">News</a>
+  
+  <!-- DYNAMIC AUTH LINKS -->
+  <a id="loginLink" class="hidden" onclick="openPage('login')">Login</a>
   <a id="adminMenu" class="hidden" onclick="openPage('admin')">Admin Panel</a>
-  <a onclick="logout()">Logout</a>
+  <a id="logoutLink" class="hidden" onclick="logout()">Logout</a>
 </div>
 
 <!-- LOGIN -->
-<div id="loginPage" class="container">
+<div id="loginPage" class="container hidden">
   <div class="card">
     <div class="appName">Sreenagar Rokter Bondhon</div>
     <h2>Login</h2>
@@ -271,7 +274,7 @@ const db = firebase.firestore();
 /* ADMIN CONFIG */
 const ADMIN_EMAIL = "SRP.MART.ONLINE@GMAIL.COM";
 
-/* SECURITY: Prevent XSS (Cross-Site Scripting) */
+/* SECURITY: Prevent XSS */
 function escapeHtml(text) {
   if (!text) return "";
   return text
@@ -304,6 +307,7 @@ function timeSince(timestamp) {
 setTimeout(()=>{
   document.getElementById("splash").style.display="none";
   document.getElementById("app").classList.remove("hidden");
+  openPage('home'); // Default open Home page
 },1500);
 
 /* MENU */
@@ -315,7 +319,7 @@ function toggleMenu(){
 }
 
 function hidePages(){
-  ["home","request","news","admin"].forEach(id=>{
+  ["home","request","news","admin","loginPage","registerPage"].forEach(id=>{
     document.getElementById(id).classList.add("hidden");
   });
 }
@@ -323,7 +327,10 @@ function hidePages(){
 function openPage(id){
   hidePages();
   document.getElementById(id).classList.remove("hidden");
-  toggleMenu(); // Close menu after selection
+  
+  // Close menu if open
+  const menu = document.getElementById("menu");
+  if(menu.classList.contains("active")) toggleMenu();
 }
 
 /* LOGIN REGISTER SWITCH */
@@ -349,12 +356,11 @@ function register(){
 
   auth.createUserWithEmailAndPassword(email, pass)
     .then((userCredential) => {
-      // Update profile with display name
       return userCredential.user.updateProfile({ displayName: name });
     })
     .then(()=>{
       alert("Register Success");
-      showLogin();
+      openPage('home');
     })
     .catch(e=>alert(e.message));
 }
@@ -369,36 +375,50 @@ function login(){
   }
 
   auth.signInWithEmailAndPassword(email, pass)
+    .then(()=>{
+        openPage('home');
+    })
     .catch(e=>alert(e.message));
 }
 
 function logout(){ 
   auth.signOut(); 
-  toggleMenu(); // Close menu on logout
+  alert("Logged out successfully");
 }
 
-/* AUTH STATE */
+/* AUTH STATE LISTENER - GUEST MODE LOGIC */
 auth.onAuthStateChanged(user=>{
+  const loginLink = document.getElementById("loginLink");
+  const logoutLink = document.getElementById("logoutLink");
+  const adminMenu = document.getElementById("adminMenu");
+
   if(user){
-    document.getElementById("loginPage").classList.add("hidden");
-    document.getElementById("registerPage").classList.add("hidden");
-    openPage('home');
+    // LOGGED IN STATE
+    loginLink.classList.add("hidden");
+    logoutLink.classList.remove("hidden");
     
-    // Check admin role
     if(user.email && user.email.toUpperCase() === ADMIN_EMAIL.toUpperCase()){
-      document.getElementById("adminMenu").classList.remove("hidden");
+      adminMenu.classList.remove("hidden");
     } else {
-      document.getElementById("adminMenu").classList.add("hidden");
+      adminMenu.classList.add("hidden");
     }
-  }else{
-    hidePages();
-    document.getElementById("loginPage").classList.remove("hidden");
-    document.getElementById("adminMenu").classList.add("hidden");
+  } else {
+    // GUEST STATE (LOGGED OUT)
+    loginLink.classList.remove("hidden"); // Show Login button in menu
+    logoutLink.classList.add("hidden");   // Hide Logout button
+    adminMenu.classList.add("hidden");    // Hide Admin panel
   }
 });
 
 /* REQUEST */
 function submitRequest(){
+  // Security Check: Must be logged in to submit
+  if(!auth.currentUser) {
+    alert("Please Login first to submit a blood request.");
+    openPage('login');
+    return;
+  }
+
   const patientVal = document.getElementById("patient").value;
   const locationVal = document.getElementById("location").value;
   const bloodVal = document.getElementById("reqBlood").value;
@@ -414,7 +434,8 @@ function submitRequest(){
     location: locationVal,
     blood: bloodVal,
     contact: contactVal,
-    time: Date.now()
+    time: Date.now(),
+    uid: auth.currentUser.uid // Optional: track who posted
   }).then(()=>{
     alert("Request Submitted Successfully!");
     document.getElementById("patient").value = "";
