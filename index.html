@@ -13,18 +13,33 @@ body{background:#f4f4f4;padding-bottom:85px}
 .header{
   background:#d71920;
   color:white;
-  padding:15px;
+  padding:10px;
   text-align:center;
-  font-size:20px;
+  font-size:18px;
   position:relative;
   z-index:10;
+  height:65px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .menuBtn{
   position:absolute;
   left:15px;
-  top:12px;
+  top:20px;
   font-size:22px;
   cursor:pointer;
+  font-weight:normal;
+}
+
+/* LOGO STYLE (Your Code Integrated) */
+.header-logo{
+  width: 45px;  /* Size for header */
+  height: 45px;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  border: 2px solid white;
 }
 
 /* APP NAME */
@@ -64,88 +79,84 @@ button{
   margin-top:10px;
   font-size:16px;
   cursor:pointer;
-  transition: background 0.3s;
 }
 button:hover{background:#b01518;}
-.link{text-align:center;margin-top:10px}
-.link span{color:#d71920;cursor:pointer;font-weight:bold;}
 
 /* OVERLAY */
 .overlay{
-  position:fixed;
-  left:0; top:0;
+  position:fixed; left:0; top:0;
   width:100%; height:100%;
   background:rgba(0,0,0,0.5);
-  z-index:998;
-  display:none;
+  z-index:998; display:none;
 }
 
 /* DRAWER */
 .menu{
-  position:fixed;
-  left:-260px;
-  top:0;
-  width:250px;
-  height:100%;
+  position:fixed; left:-260px; top:0;
+  width:250px; height:100%;
   background:white;
   transition:.3s;
   box-shadow:2px 0 8px rgba(0,0,0,.3);
   z-index:999;
 }
 .menu.active{left:0}
-.menu h3{
-  background:#d71920;
-  color:white;
-  padding:20px;
-  margin:0;
-}
+.menu h3{background:#d71920; color:white; padding:20px; margin:0;}
 .menu a{
-  display:block;
-  padding:16px 20px;
+  display:block; padding:16px 20px;
   border-bottom:1px solid #eee;
-  cursor:pointer;
-  color:#333;
-  text-decoration:none;
+  cursor:pointer; color:#333; text-decoration:none;
 }
-.menu a:hover{background:#f9f9f9}
 
-/* REQUEST CARD */
-.request{
-  background:white;
-  border-radius:10px;
-  overflow:hidden;
-  margin-bottom:12px;
-  box-shadow:0 2px 6px rgba(0,0,0,.2);
+/* HOME INFO BOX */
+.info-box{
+  background:#fff3cd;
+  border-left:5px solid #d71920;
+  padding:15px;
+  margin-bottom:15px;
+  border-radius:5px;
 }
-.request .body{padding:15px}
-.request .footer{
-  background:#d71920;
+.info-box h3{color:#856404; margin-bottom:5px;}
+
+/* FACEBOOK CARD */
+.fb-card{
+  background:#1877F2;
   color:white;
+  border-radius:10px;
+  padding:20px;
+  margin-bottom:15px;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+  cursor:pointer;
   text-align:center;
-  padding:12px;
-  font-weight:bold;
 }
-.request .time{
-  color:#888;
-  font-size:12px;
-  margin-top:5px;
-}
+.fb-card:hover{background:#165db6;}
 
 .hidden{display:none}
 
 /* FOOTER */
 .footer{
-  position:fixed;
-  bottom:0;
-  left:0;
-  width:100%;
-  background:#111;
-  color:white;
-  text-align:center;
-  padding:10px;
-  font-size:13px;
-  line-height:1.5;
-  z-index:10;
+  position:fixed; bottom:0; left:0;
+  width:100%; background:#111;
+  color:white; text-align:center;
+  padding:10px; font-size:13px;
+  line-height:1.5; z-index:10;
+}
+
+/* SPLASH LOGO (Your Code Integrated) */
+.splash-logo-container {
+    width: 160px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.splash-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    border: 4px solid #d71920;
 }
 </style>
 </head>
@@ -153,8 +164,14 @@ button:hover{background:#b01518;}
 
 <!-- SPLASH -->
 <div id="splash" style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#eee">
-  <div class="appName">Sreenagar Rokter Bondhon</div>
-  <h2 style="color:#d71920">Blood Donation App</h2>
+  
+  <!-- LOGO CONTAINER -->
+  <div class="splash-logo-container">
+    <!-- Note: Use Direct Image Link here if this URL is a webpage -->
+    <img src="https://ibb.co.com/7ds7Sd0w" class="splash-logo" alt="Logo">
+  </div>
+
+  <h2 style="color:#d71920; font-size:22px;">Sreenagar Rokter Bondhon</h2>
   <p style="margin-top:10px; color:#777">Loading...</p>
 </div>
 
@@ -163,10 +180,10 @@ button:hover{background:#b01518;}
 
 <div class="header">
   <span class="menuBtn" onclick="toggleMenu()">☰</span>
-  Blood Donation
+  <!-- LOGO IN HEADER -->
+  <img src="https://ibb.co.com/7ds7Sd0w" class="header-logo" alt="Logo">
 </div>
 
-<!-- OVERLAY FOR MENU -->
 <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
 <!-- MENU -->
@@ -174,140 +191,116 @@ button:hover{background:#b01518;}
   <h3>Menu</h3>
   <a onclick="openPage('home')">Home</a>
   <a onclick="openPage('request')">Request Blood</a>
-  <a onclick="openPage('news')">News</a>
-  
-  <!-- DYNAMIC AUTH LINKS -->
-  <a id="loginLink" class="hidden" onclick="openPage('login')">Login</a>
-  <a id="adminMenu" class="hidden" onclick="openPage('admin')">Admin Panel</a>
-  <a id="logoutLink" class="hidden" onclick="logout()">Logout</a>
-</div>
-
-<!-- LOGIN -->
-<div id="loginPage" class="container hidden">
-  <div class="card">
-    <div class="appName">Sreenagar Rokter Bondhon</div>
-    <h2>Login</h2>
-    <input id="loginEmail" placeholder="Email" type="email">
-    <input id="loginPass" type="password" placeholder="Password">
-    <button onclick="login()">Login</button>
-    <div class="link">New user? <span onclick="showRegister()">Create Account</span></div>
-  </div>
-</div>
-
-<!-- REGISTER -->
-<div id="registerPage" class="container hidden">
-  <div class="card">
-    <div class="appName">Sreenagar Rokter Bondhon</div>
-    <h2>Register</h2>
-    <input id="regName" placeholder="Full Name">
-    <input id="regEmail" placeholder="Email" type="email">
-    <input id="regPass" type="password" placeholder="Password">
-    <button onclick="register()">Register</button>
-    <div class="link"><span onclick="showLogin()">Back to Login</span></div>
-  </div>
+  <a onclick="openPage('about')">About Us</a>
+  <a href="https://facebook.com/groups/776274101742103/" target="_blank">📘 Join FB Group</a>
 </div>
 
 <!-- HOME -->
-<div id="home" class="container hidden">
-  <h2 style="text-align:left; color:#333; margin-bottom:15px;">Active Requests</h2>
-  <div id="requestsList"></div>
+<div id="home" class="container">
+  <div class="card">
+    <div class="appName">Sreenagar Rokter Bondhon</div>
+    <h2>Welcome</h2>
+    <p style="text-align:center; color:#666;">
+      Donate Blood, Save Life.
+    </p>
+  </div>
+
+  <div class="fb-card" onclick="window.open('https://facebook.com/groups/776274101742103/', '_blank')">
+    <h3>📘 Join Our Community</h3>
+    <p style="font-size:14px; margin-top:5px;">Stay updated & help others.</p>
+    <div style="margin-top:10px; background:white; color:#1877F2; padding:8px; border-radius:5px; font-weight:bold; display:inline-block; padding-left:20px; padding-right:20px;">
+      Join Group
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h3>Emergency Contact</h3>
+    <p>If you need blood urgently, please call us directly.</p>
+    <p style="margin-top:10px; font-weight:bold; font-size:22px; color:#d71920;">
+      📞 01842655193
+    </p>
+  </div>
+  
+  <div class="card">
+    <h3 style="margin-bottom:10px; color:#333">How to Request Blood?</h3>
+    <p style="color:#555; line-height:1.6">
+      1. Click on the menu (☰) top left.<br>
+      2. Select "Request Blood".<br>
+      3. Fill the form and submit.<br>
+      4. We will receive your request via Email immediately.
+    </p>
+  </div>
 </div>
 
 <!-- REQUEST -->
 <div id="request" class="container hidden">
   <div class="card">
     <h2>Submit Blood Request</h2>
+    <p style="text-align:center; color:#777; font-size:12px; margin-bottom:10px;">
+      (This form sends email directly to Admin)
+    </p>
     <input id="patient" placeholder="Patient Name">
     <input id="location" placeholder="Hospital / Location">
     <input id="reqBlood" placeholder="Blood Group (A+, O-, etc)">
-    <input id="reqContact" type="tel" placeholder="Contact Number (Required)">
-    <button onclick="submitRequest()">Submit Request</button>
+    <input id="reqContact" type="tel" placeholder="Your Contact Number">
+    <input id="reqEmail" type="email" placeholder="Your Email (Optional)">
+    <button onclick="sendEmailRequest()">Submit Request</button>
   </div>
 </div>
 
-<!-- NEWS -->
-<div id="news" class="container hidden">
-  <h2 style="text-align:left; color:#333; margin-bottom:15px;">News & Updates</h2>
-  <div id="newsList"></div>
-</div>
-
-<!-- ADMIN -->
-<div id="admin" class="container hidden">
+<!-- ABOUT -->
+<div id="about" class="container hidden">
   <div class="card">
-    <h2>Add News (Admin)</h2>
-    <input id="newsTitle" placeholder="Title">
-    <textarea id="newsBody" rows="4" placeholder="News text"></textarea>
-    <button onclick="addNews()">Add News</button>
+    <h2>About Us</h2>
+    <p style="color:#555; line-height:1.6">
+      <strong>Sreenagar Rokter Bondhon</strong> is a voluntary blood donation organization.
+      <br><br>
+      We connect blood donors with patients in need.
+      <br><br>
+      <strong>Developer:</strong> SRP SOFT LTD.
+    </p>
+  </div>
+  <div class="fb-card" onclick="window.open('https://facebook.com/groups/776274101742103/', '_blank')">
+    <h3>📘 Facebook Group</h3>
+    <p style="font-size:14px; margin-top:5px;">Join our community for more updates.</p>
   </div>
 </div>
 
 </div>
 
-<!-- FOOTER -->
 <div class="footer">
   Developer Company: SRP SOFT LTD.<br>
-  TEL: +8809696060547
+  Hotline: 01842655193
 </div>
 
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<!-- EMAILJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script>
-/* FIREBASE CONFIG */
-const firebaseConfig = {
-  apiKey: "AIzaSyBYkllj0Ed40i8f0PVZhENfp4_xufdbpE8",
-  authDomain: "srb-2026.firebaseapp.com",
-  projectId: "srb-2026",
-  storageBucket: "srb-2026.firebasestorage.app",
-  messagingSenderId: "843806660236",
-  appId: "1:843806660236:web:b48f4e7c3a962d57e84da9",
-  measurementId: "G-3JYR0GE77W"
-};
+/* ================================
+   CONFIGURATION 
+   ================================ */
 
-firebase.initializeApp(firebaseConfig);
+const ADMIN_EMAIL = "omorhosshin@gmail.com"; 
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+// EmailJS Keys
+const EMAILJS_PUBLIC_KEY = "tTDL_g9ChY2fiUl4t";
+const EMAILJS_SERVICE_ID = "service_rka3imy";
+const EMAILJS_TEMPLATE_ID = "template_5j956tn";
 
-/* ADMIN CONFIG */
-const ADMIN_EMAIL = "SRP.MART.ONLINE@GMAIL.COM";
-
-/* SECURITY: Prevent XSS */
-function escapeHtml(text) {
-  if (!text) return "";
-  return text
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+// Initialize EmailJS
+if(typeof emailjs !== 'undefined'){
+    emailjs.init(EMAILJS_PUBLIC_KEY);
 }
 
-/* TIME FORMATTER */
-function timeSince(timestamp) {
-  const now = new Date();
-  const seconds = Math.floor((now - timestamp) / 1000);
-  
-  let interval = seconds / 31536000;
-  if (interval > 1) return Math.floor(interval) + " years ago";
-  interval = seconds / 2592000;
-  if (interval > 1) return Math.floor(interval) + " months ago";
-  interval = seconds / 86400;
-  if (interval > 1) return Math.floor(interval) + " days ago";
-  interval = seconds / 3600;
-  if (interval > 1) return Math.floor(interval) + " hours ago";
-  interval = seconds / 60;
-  if (interval > 1) return Math.floor(interval) + " minutes ago";
-  return "Just now";
-}
+/* ================================
+   APP LOGIC 
+   ================================ */
 
 /* SPLASH */
 setTimeout(()=>{
   document.getElementById("splash").style.display="none";
   document.getElementById("app").classList.remove("hidden");
-  openPage('home'); // Default open Home page
 },1500);
 
 /* MENU */
@@ -319,7 +312,7 @@ function toggleMenu(){
 }
 
 function hidePages(){
-  ["home","request","news","admin","loginPage","registerPage"].forEach(id=>{
+  ["home","request","about"].forEach(id=>{
     document.getElementById(id).classList.add("hidden");
   });
 }
@@ -327,214 +320,53 @@ function hidePages(){
 function openPage(id){
   hidePages();
   document.getElementById(id).classList.remove("hidden");
-  
-  // Close menu if open
   const menu = document.getElementById("menu");
   if(menu.classList.contains("active")) toggleMenu();
 }
 
-/* LOGIN REGISTER SWITCH */
-function showRegister(){
-  document.getElementById("loginPage").classList.add("hidden");
-  document.getElementById("registerPage").classList.remove("hidden");
-}
-function showLogin(){
-  document.getElementById("registerPage").classList.add("hidden");
-  document.getElementById("loginPage").classList.remove("hidden");
-}
-
-/* AUTH */
-function register(){
-  const name = document.getElementById("regName").value;
-  const email = document.getElementById("regEmail").value;
-  const pass = document.getElementById("regPass").value;
-
-  if(!name || !email || !pass) {
-    alert("Please fill all fields");
-    return;
-  }
-
-  auth.createUserWithEmailAndPassword(email, pass)
-    .then((userCredential) => {
-      return userCredential.user.updateProfile({ displayName: name });
-    })
-    .then(()=>{
-      alert("Register Success");
-      openPage('home');
-    })
-    .catch(e=>alert(e.message));
-}
-
-function login(){
-  const email = document.getElementById("loginEmail").value;
-  const pass = document.getElementById("loginPass").value;
-  
-  if(!email || !pass) {
-    alert("Please enter email and password");
-    return;
-  }
-
-  auth.signInWithEmailAndPassword(email, pass)
-    .then(()=>{
-        openPage('home');
-    })
-    .catch(e=>alert(e.message));
-}
-
-function logout(){ 
-  auth.signOut(); 
-  alert("Logged out successfully");
-}
-
-/* AUTH STATE LISTENER - GUEST MODE LOGIC */
-auth.onAuthStateChanged(user=>{
-  const loginLink = document.getElementById("loginLink");
-  const logoutLink = document.getElementById("logoutLink");
-  const adminMenu = document.getElementById("adminMenu");
-
-  if(user){
-    // LOGGED IN STATE
-    loginLink.classList.add("hidden");
-    logoutLink.classList.remove("hidden");
-    
-    if(user.email && user.email.toUpperCase() === ADMIN_EMAIL.toUpperCase()){
-      adminMenu.classList.remove("hidden");
-    } else {
-      adminMenu.classList.add("hidden");
-    }
-  } else {
-    // GUEST STATE (LOGGED OUT)
-    loginLink.classList.remove("hidden"); // Show Login button in menu
-    logoutLink.classList.add("hidden");   // Hide Logout button
-    adminMenu.classList.add("hidden");    // Hide Admin panel
-  }
-});
-
-/* REQUEST */
-function submitRequest(){
-  // Security Check: Must be logged in to submit
-  if(!auth.currentUser) {
-    alert("Please Login first to submit a blood request.");
-    openPage('login');
-    return;
-  }
-
+/* EMAIL REQUEST FUNCTION */
+function sendEmailRequest(){
   const patientVal = document.getElementById("patient").value;
   const locationVal = document.getElementById("location").value;
   const bloodVal = document.getElementById("reqBlood").value;
   const contactVal = document.getElementById("reqContact").value;
+  const userEmailVal = document.getElementById("reqEmail").value;
 
   if(!patientVal || !locationVal || !bloodVal || !contactVal) {
-    alert("All fields including Contact Number are required!");
+    alert("Please fill all required fields!");
     return;
   }
 
-  db.collection("requests").add({
-    patient: patientVal,
-    location: locationVal,
+  // Prepare parameters
+  const templateParams = {
+    to_email: ADMIN_EMAIL, 
+    patient: patientVal, 
     blood: bloodVal,
+    location: locationVal, 
     contact: contactVal,
-    time: Date.now(),
-    uid: auth.currentUser.uid // Optional: track who posted
-  }).then(()=>{
-    alert("Request Submitted Successfully!");
-    document.getElementById("patient").value = "";
-    document.getElementById("location").value = "";
-    document.getElementById("reqBlood").value = "";
-    document.getElementById("reqContact").value = "";
-    openPage('home');
-  }).catch(e => alert("Error: " + e.message));
-}
+    reply_to: userEmailVal || "Not Provided"
+  };
 
-function loadRequests(){
-  db.collection("requests").orderBy("time","desc")
-  .onSnapshot(snap=>{
-    const list = document.getElementById("requestsList");
-    list.innerHTML="";
-    
-    if(snap.empty){
-      list.innerHTML = "<p style='text-align:center;color:#777'>No active requests.</p>";
-      return;
-    }
-
-    snap.forEach(doc=>{
-      const d=doc.data();
-      const safePatient = escapeHtml(d.patient);
-      const safeLocation = escapeHtml(d.location);
-      const safeBlood = escapeHtml(d.blood);
-      const safeContact = escapeHtml(d.contact);
-      const displayTime = d.time ? timeSince(d.time) : "";
-
-      list.innerHTML+=`
-      <div class="request">
-        <div class="body">
-          <h3 style="color:#d71920">${safePatient}</h3>
-          <p><strong>Location:</strong> ${safeLocation}</p>
-          <p><strong>Blood:</strong> ${safeBlood}</p>
-          <p><strong>Contact:</strong> ${safeContact}</p>
-          <div class="time">${displayTime}</div>
-        </div>
-        <div class="footer">Call Now</div>
-      </div>`;
-    });
-  });
-}
-
-/* NEWS */
-function addNews(){
-  if(!auth.currentUser || auth.currentUser.email.toUpperCase() !== ADMIN_EMAIL.toUpperCase()){
-    alert("Admin Only");
-    return;
+  // Send Email
+  if(typeof emailjs !== 'undefined'){
+      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams)
+        .then(() => {
+          alert("Request Sent Successfully!");
+          document.getElementById("patient").value = "";
+          document.getElementById("location").value = "";
+          document.getElementById("reqBlood").value = "";
+          document.getElementById("reqContact").value = "";
+          document.getElementById("reqEmail").value = "";
+          openPage('home');
+        })
+        .catch((e) => {
+           alert("Failed to send request. Check console.");
+           console.error("EmailJS Error:", e);
+        });
+  } else {
+      alert("Email service not loaded.");
   }
-
-  const titleVal = document.getElementById("newsTitle").value;
-  const bodyVal = document.getElementById("newsBody").value;
-
-  if(!titleVal || !bodyVal) {
-    alert("Title and Body required");
-    return;
-  }
-
-  db.collection("news").add({
-    title: titleVal,
-    body: bodyVal,
-    time:Date.now()
-  }).then(()=>{
-    alert("News Added");
-    document.getElementById("newsTitle").value = "";
-    document.getElementById("newsBody").value = "";
-  }).catch(e => alert("Error: " + e.message));
 }
-
-function loadNews(){
-  db.collection("news").orderBy("time","desc")
-  .onSnapshot(snap=>{
-    const list = document.getElementById("newsList");
-    list.innerHTML="";
-    
-    if(snap.empty){
-       list.innerHTML = "<p style='text-align:center;color:#777'>No news available.</p>";
-       return;
-    }
-
-    snap.forEach(doc=>{
-      const n=doc.data();
-      const safeTitle = escapeHtml(n.title);
-      const safeBody = escapeHtml(n.body);
-      list.innerHTML+=`
-      <div class="card">
-        <h3 style="margin-bottom:5px">${safeTitle}</h3>
-        <p style="color:#555">${safeBody}</p>
-      </div>`;
-    });
-  });
-}
-
-/* Initialize Listeners */
-loadRequests();
-loadNews();
-
 </script>
-
 </body>
 </html>
